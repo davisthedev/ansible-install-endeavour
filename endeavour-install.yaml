@@ -1,0 +1,71 @@
+- name: Endeavour Setup
+  hosts: localhost
+  tasks:
+    - name: Disable pcspkr
+      ansible.builtin.command: sudo rmmod pcspkr
+
+    - name: Disable snd_pcsp
+      ansible.builtin.command: sudo rmmod snd_pcsp
+
+    - name: Blacklist pcspkr
+      ansible.builtin.command: sudo echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+      become: yes
+      become_user: root
+
+    - name: Blacklist snd_pcsp
+      ansible.builtin.command: sudo echo "blacklist snd_pcsp" > /etc/modprobe.d/nobeep.conf
+      become: yes
+      become_user: root
+
+    - name: Install vi
+      community.general.pacman:
+        name: vi
+        state: present
+
+    - name: Install vim
+      community.general.pacman:
+        name: vim
+        state: present
+
+    - name: Git nvim config
+      ansible.builtin.git:
+        repo: 'https://github.com/davisthedev/nvim.git'
+        dest: /home/davis/.config/
+
+    - name: Install neovim
+      community.general.pacman:
+        name: neovim
+        state: present
+
+    - name: Install Alacritty
+      community.general.pacman:
+        name: alacritty
+        state: present
+
+    - name: Install picom
+      community.general.pacman:
+        name: picom
+        state: present
+
+    - name: Get .zshrc
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/davisthedev/.zshrc
+        dest: /home/davis/
+
+    - name: Install polybar
+      community.general.pacman:
+        name: polybar
+        state: present
+
+    - name: Install zsh
+      community.general.pacman:
+        name: zsh
+        state: present
+
+    - name: Install oh-my-zsh
+      ansible.builtin.shell: "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    - name: Change shell
+      ansible.builtin.shell: chsh -s $(which zsh)
+
+

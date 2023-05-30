@@ -1,0 +1,47 @@
+- name: Endeavour Setup
+  hosts: localhost
+  tasks:
+    - name: Git config branch
+      ansible.builtin.shell: git config --global init.defaultBranch main
+
+    - name: Install golang
+      community.general.pacman:
+        name: go
+        state: present
+
+    - name: Install nerdfonts
+      ansible.builtin.shell: sudo yay -S nerd-fonts-meta
+
+    - name: Install nvm
+      ansible.builtin.shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+    - name: Config nvm
+      ansible.builtin.shell: >
+        export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] &&
+        printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"[ -s "$NVM_DIR/nvm.sh" ] &&
+        \. "$NVM_DIR/nvm.sh"
+
+    - name: Install nvm --lts
+      ansible.builtin.shell: >
+        nvm install --lts
+        nvm use --lts
+
+    - name: Install rust
+      ansible.builtin.shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+    - name: Install bitwarden
+      community.general.pacman:
+        name: bitwarden
+        state: present
+
+    - name: Install discord
+      community.general.pacman:
+        name: discord
+        state: present
+
+    - name: Install obsidian
+      community.general.pacman:
+        name: obsidian
+        state: present
+
+
