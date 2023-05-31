@@ -3,9 +3,11 @@
   tasks:
     - name: Disable pcspkr
       ansible.builtin.command: sudo rmmod pcspkr
+      ignore_errors: true
 
     - name: Disable snd_pcsp
       ansible.builtin.command: sudo rmmod snd_pcsp
+      ignore_errors: true
 
     - name: Blacklist pcspkr
       ansible.builtin.command: sudo echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
@@ -30,7 +32,7 @@
     - name: Git nvim config
       ansible.builtin.git:
         repo: 'https://github.com/davisthedev/nvim.git'
-        dest: /home/davis/.config/
+        dest: /home/davis/.config/nvim/
 
     - name: Install neovim
       community.general.pacman:
@@ -49,7 +51,7 @@
 
     - name: Get .zshrc
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/davisthedev/.zshrc
+        url: https://raw.githubusercontent.com/davisthedev/zshrc/main/.zshrc
         dest: /home/davis/
 
     - name: Install polybar
@@ -63,7 +65,7 @@
         state: present
 
     - name: Install oh-my-zsh
-      ansible.builtin.shell: "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 
     - name: Change shell
       ansible.builtin.shell: chsh -s $(which zsh)
